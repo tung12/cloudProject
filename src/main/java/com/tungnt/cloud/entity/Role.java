@@ -1,12 +1,10 @@
 package com.tungnt.cloud.entity;
 
-import javax.persistence.Basic;
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.Id;
+import javax.persistence.*;
 import java.util.Objects;
 
 @Entity
+@Table(name = "role")
 public class Role {
     private int id;
     private String roleName;

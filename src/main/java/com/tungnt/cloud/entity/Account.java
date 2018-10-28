@@ -2,14 +2,12 @@ package com.tungnt.cloud.entity;
 
 import org.hibernate.annotations.CreationTimestamp;
 
-import javax.persistence.Basic;
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.Id;
+import javax.persistence.*;
 import java.sql.Timestamp;
 import java.util.Objects;
 
 @Entity
+@Table(name = "account")
 public class Account {
     private int id;
     private String username;
@@ -18,6 +16,7 @@ public class Account {
     private Integer roleId;
 
     @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id")
     public int getId() {
         return id;

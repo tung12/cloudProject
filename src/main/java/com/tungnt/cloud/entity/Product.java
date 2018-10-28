@@ -1,28 +1,30 @@
 package com.tungnt.cloud.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
+import org.springframework.web.multipart.MultipartFile;
 
-import javax.persistence.Basic;
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.Id;
+import javax.persistence.*;
 import java.sql.Timestamp;
 import java.util.Objects;
 
 @Entity
+@Table(name = "products")
 public class Product {
     private int id;
     private String name;
-    private Integer quantity;
     private Double price;
     private String imageUrl;
     private Integer editor;
     private Timestamp createdDate;
     private Timestamp updatedDate;
+    private MultipartFile files;
+
 
     @Id
     @Column(name = "id")
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     public int getId() {
         return id;
     }
@@ -41,15 +43,6 @@ public class Product {
         this.name = name;
     }
 
-    @Basic
-    @Column(name = "quantity")
-    public Integer getQuantity() {
-        return quantity;
-    }
-
-    public void setQuantity(Integer quantity) {
-        this.quantity = quantity;
-    }
 
     @Basic
     @Column(name = "price")
@@ -103,6 +96,16 @@ public class Product {
         this.updatedDate = updatedDate;
     }
 
+    @Transient
+    @JsonIgnore
+    public MultipartFile getImageFile() {
+        return files;
+    }
+
+    public void setImageFile(MultipartFile files) {
+        this.files = files;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
@@ -110,7 +113,6 @@ public class Product {
         Product product = (Product) o;
         return id == product.id &&
                 Objects.equals(name, product.name) &&
-                Objects.equals(quantity, product.quantity) &&
                 Objects.equals(price, product.price) &&
                 Objects.equals(imageUrl, product.imageUrl) &&
                 Objects.equals(editor, product.editor) &&
@@ -120,6 +122,6 @@ public class Product {
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, name, quantity, price, imageUrl, editor, createdDate, updatedDate);
+        return Objects.hash(id, name, price, imageUrl, editor, createdDate, updatedDate);
     }
 }
