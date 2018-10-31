@@ -8,7 +8,7 @@ import moment  from "moment/moment.js";
 import 'ag-grid-community/dist/styles/ag-grid.css';
 import 'ag-grid-community/dist/styles/ag-theme-balham.css';
 import {MAIN_API} from '../../service/apiService.js';
-
+import "./Products.css";
 class Products extends Component {
 
 
@@ -23,8 +23,9 @@ class Products extends Component {
                 {headerName: "Name", field: "name"},
                 {headerName: "Price", field: "price"},
                 {headerName: "Created", field: "createdDate", cellRenderer:this.createdDateCellRenderer},
-                {headerName: "Updated", field: "updatedDate" , cellRenderer: this.updatedDateCellRenderer}
-    
+                {headerName: "Updated", field: "updatedDate" , cellRenderer: this.updatedDateCellRenderer},
+                {headerName: "Action", field: "action" , cellRenderer: this.actionCellRenderer}
+
             ],
             rowData: [
                 
@@ -121,6 +122,12 @@ class Products extends Component {
     return '<span>'+moment(t).format("hh:mm:ss DD-MM-YYYY")+'</span>';
     }  
 
+    actionCellRenderer(params) {
+      var updateBtn = '<button type="button" class="btn btn-info">Update</button>';
+      var deleteBtn = '<button type="button" class="btn btn-danger">Delete</button>';
+  return '<span>'+updateBtn+'</br>'+deleteBtn+'</span>';
+  }  
+
     onQuickFilterChanged() {
         this.gridApi.setQuickFilter(document.getElementById("filter").value);
       }
@@ -184,7 +191,7 @@ class Products extends Component {
                       onInput={this.onQuickFilterChanged.bind(this)}
                       />
                     </FormGroup>  
-        <Button onClick={()=> {this.toggle() ; this.bindCreateModal()}} className="mr-1" >Launch demo modal</Button>
+        <Button onClick={()=> {this.toggle() ; this.bindCreateModal()}} className="btn btn-primary" >Create</Button>
             <div style={{ height: '550px', width: '100%' }} className="ag-theme-balham">
                 <AgGridReact
                     columnDefs={this.state.columnDefs} rowSelection="multiple"
