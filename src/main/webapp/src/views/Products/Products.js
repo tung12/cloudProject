@@ -86,6 +86,8 @@ class Products extends Component {
     }
 
     onGridReady(params) {
+      console.log(params);
+      
         this.gridApi = params.api;
         this.gridColumnApi = params.columnApi;
     
@@ -131,6 +133,10 @@ class Products extends Component {
     onQuickFilterChanged() {
         this.gridApi.setQuickFilter(document.getElementById("filter").value);
       }
+    update(row) {
+      console.log(row);
+      
+    }
   render() {
 
     //const userList = usersData.filter((user) => user.id < 10)

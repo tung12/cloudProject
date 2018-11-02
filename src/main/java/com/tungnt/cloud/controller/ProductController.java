@@ -38,7 +38,7 @@ public class ProductController {
         return ResponseEntity.status(HttpStatus.OK).body(productService.addProduct(product));
     }
 
-    @PostMapping(value = "/product/{id}")
+    @GetMapping(value = "/product/{id}")
     public ResponseEntity getProductById(@PathVariable Integer id) throws ProductException.ProductNotExistException {
         return ResponseEntity.status(HttpStatus.OK).body(productService.findProductById(id));
     }

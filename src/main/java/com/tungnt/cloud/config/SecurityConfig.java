@@ -69,4 +69,6 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
         CorsFilter bean = new  CorsFilter(source);
         return bean;
     }
+
+
 }
