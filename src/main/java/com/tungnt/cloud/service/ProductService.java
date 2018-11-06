@@ -55,6 +55,10 @@ public class ProductService {
         return productRepository.findById(id).orElseThrow(ProductException.ProductNotExistException::new);
     }
 
+    public void deleteProduct(Integer id) throws ProductException.ProductNotExistException {
+        Product product = productRepository.findById(id).orElseThrow(ProductException.ProductNotExistException::new);
+        productRepository.delete(product);
+    }
 //    public Product changeImage(MultipartFile file, String username) throws ProductException.ProductNotExistException {
 //        return productRepository.findById(id).orElseThrow(ProductException.ProductNotExistException::new);
 //    }

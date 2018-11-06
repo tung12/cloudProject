@@ -3,7 +3,7 @@ import Axios from "axios";
 
 export let MAIN_API = Axios.create({
     //BE local
-    baseURL: ''
+    baseURL: 'http://localhost:8080/api'
     //BE production
      //baseURL: 'https://cloudproject123.herokuapp.com/api'
 });

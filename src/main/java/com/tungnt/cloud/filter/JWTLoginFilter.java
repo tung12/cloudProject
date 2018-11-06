@@ -1,5 +1,7 @@
 package com.tungnt.cloud.filter;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.tungnt.cloud.entity.Account;
 import com.tungnt.cloud.service.TokenAuthenticationService;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -25,8 +27,9 @@ public class JWTLoginFilter extends AbstractAuthenticationProcessingFilter {
     public Authentication attemptAuthentication(HttpServletRequest request, HttpServletResponse response)
             throws AuthenticationException, IOException, ServletException {
 
-        String username = request.getParameter("username");
-        String password = request.getParameter("password");
+        Account account = new ObjectMapper().readValue(request.getReader(), Account.class);
+        String username = account.getUsername();
+        String password = account.getPassword();
 
         System.out.printf("JWTLoginFilter.attemptAuthentication: username/password= %s,%s", username, password);
         System.out.println();

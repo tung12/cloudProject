@@ -43,6 +43,11 @@ public class ProductController {
         return ResponseEntity.status(HttpStatus.OK).body(productService.findProductById(id));
     }
 
+    @DeleteMapping(value="/product/{id}")
+    public ResponseEntity deleteProduct(@PathVariable Integer id) throws ProductException.ProductNotExistException {
+        productService.deleteProduct(id);
+        return ResponseEntity.status(HttpStatus.OK).build();
+    }
 //    @PostMapping(value = "/upload-image", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
 //    public ResponseEntity changeImage(@RequestParam("file") MultipartFile file, Principal principal) throws ProductException.ProductNotExistException {
 //        return ResponseEntity.status(HttpStatus.OK).body(productService.findProductById(id));

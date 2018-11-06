@@ -1,8 +1,11 @@
 import React, { Component } from 'react';
 import { Button, Card, CardBody, CardFooter, Col, Container, Form, Input, InputGroup, InputGroupAddon, InputGroupText, Row } from 'reactstrap';
-
+import { Redirect } from "react-router-dom";
 class Register extends Component {
   render() {
+    if (localStorage.getItem('token')) {
+          return <Redirect to='/'/>
+    }
     return (
       <div className="app flex-row align-items-center">
         <Container>

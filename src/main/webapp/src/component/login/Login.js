@@ -18,6 +18,7 @@ class Login extends Component {
 
 
   login = () => {
+    
     MAIN_API({
       url: "/login",
       method: "post",
@@ -31,15 +32,15 @@ class Login extends Component {
     })
       .then(res => {
         console.log(res);
-        
+
       }).catch();
   }
 
 
   render() {
     return (
-        <div className="LoginPage">   
-        <Loader type="pacman" className={this.state.loader} />   
+        <div className="LoginPage">
+        <Loader type="pacman" className={this.state.loader} />
     <FormGroup className="FormLogin" >
           <Label className="NameForm">Login</Label>
          <FormControl type="text" placeholder="Username" onChange={ e => {
@@ -58,7 +59,7 @@ class Login extends Component {
          <Button className="btn" onClick={() => this.login()}>Login</Button>
      </FormGroup>
         </div>
-     
+
     );
   }
 

@@ -1,8 +1,60 @@
 import React, { Component } from 'react';
-import { Button, Card, CardBody, CardGroup, Col, Container, Form, Input, InputGroup, InputGroupAddon, InputGroupText, Row } from 'reactstrap';
-
+import { Alert,Button, Card, CardBody, CardGroup, Col, Container, Form, Input, InputGroup, InputGroupAddon, InputGroupText, Row } from 'reactstrap';
+import { MAIN_API } from "../../../service/apiService";
+import { Redirect } from "react-router-dom";
 class Login extends Component {
+
+  constructor(props) {
+    super(props);
+
+    this.state = {
+      username:"",
+      password:"",
+      isLoggined: false,
+      isError: false
+    }
+    this.login = this.login.bind(this);
+}
+
+
+
+login = () => {
+  console.log(this.state.username);
+  console.log(this.state.password);
+  MAIN_API({
+    url: "/login",
+    method: "post",
+    data: {
+      username: this.state.username,
+      password: this.state.password
+    },
+    headers: {
+      "Content-Type":"application/json"
+    }
+  })
+    .then(res => {
+      console.log(res.headers);
+      localStorage.setItem('token', res.headers.authorization);
+      this.setState(() => ({
+        isLoggined: true
+      }))
+    }).catch(error => {
+      localStorage.clear();
+      this.setState(() => ({
+        isError: true
+      }))
+  });
+}
+
+
   render() {
+    const { from } = this.props.location.state || { from: { pathname: '/' } }
+    if (this.state.isLoggined || localStorage.getItem('token')) {
+        return <Redirect to={from}/>
+    }
+    const enabled =
+          this.state.username.length > 0 &&
+          this.state.password.length > 0;
     return (
       <div className="app flex-row align-items-center">
         <Container>
@@ -20,7 +72,15 @@ class Login extends Component {
                             <i className="icon-user"></i>
                           </InputGroupText>
                         </InputGroupAddon>
-                        <Input type="text" placeholder="Username" autoComplete="username" />
+                        <Input type="text" placeholder="Username" autoComplete="username"
+                        onChange={e =>{
+                          var newState = Object.assign({},this.state,{
+                            username : e.target.value
+                          })
+                          this.setState(newState);
+                        }
+                      }
+                        />
                       </InputGroup>
                       <InputGroup className="mb-4">
                         <InputGroupAddon addonType="prepend">
@@ -28,16 +88,27 @@ class Login extends Component {
                             <i className="icon-lock"></i>
                           </InputGroupText>
                         </InputGroupAddon>
-                        <Input type="password" placeholder="Password" autoComplete="current-password" />
+                        <Input type="password" placeholder="Password" autoComplete="current-password"
+                        onChange={e =>{
+                          var newState = Object.assign({},this.state,{
+                            password : e.target.value
+                          })
+                          this.setState(newState);
+                        }
+                      }
+                        />
                       </InputGroup>
                       <Row>
                         <Col xs="6">
-                          <Button color="primary" className="px-4">Login</Button>
+                          <Button color="primary" className="px-4" onClick={() => this.login()} disabled ={!enabled}>Login</Button>
                         </Col>
                         <Col xs="6" className="text-right">
                           <Button color="link" className="px-0">Forgot password?</Button>
                         </Col>
                       </Row>
+                      <Alert color="danger" isOpen={this.state.isError}>
+        Sai tài khoản hoặc mật khẩu . Vui lòng đăng nhập lại!
+      </Alert>
                     </Form>
                   </CardBody>
                 </Card>
@@ -55,6 +126,7 @@ class Login extends Component {
             </Col>
           </Row>
         </Container>
+
       </div>
     );
   }

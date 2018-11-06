@@ -1,5 +1,5 @@
 import React, { Component , Fragment} from 'react';
-import { Button, Card, CardBody, CardHeader, Col, Modal, ModalBody, ModalFooter, ModalHeader, FormGroup,
+import { Alert,Button, Card, CardBody, CardHeader, Col, Modal, ModalBody, ModalFooter, ModalHeader, FormGroup,
     Label,Input } from 'reactstrap';
 import {AgGridReact } from 'ag-grid-react';
 import {Image, Video, Transformation, CloudinaryContext} from 'cloudinary-react';
@@ -9,12 +9,13 @@ import 'ag-grid-community/dist/styles/ag-grid.css';
 import 'ag-grid-community/dist/styles/ag-theme-balham.css';
 import {MAIN_API} from '../../service/apiService.js';
 import "./Products.css";
+import $ from 'jquery';
 class Products extends Component {
 
 
     constructor(props) {
         super(props);
-    
+
         this.state = {
             columnDefs: [
                 {headerName: "Image", field: "image_url" ,headerCheckboxSelection: true,
@@ -28,29 +29,32 @@ class Products extends Component {
 
             ],
             rowData: [
-                
+
             ],
             files: [],
             modal: false,
             isCreate:true,
             name:"",
             price:"",
-            filter:""
+            filter:"",
+            successNotification:false
         }
 
         this.toggle = this.toggle.bind(this);
         this.createFunction = this.createFunction.bind(this);
         this.bindCreateModal = this.bindCreateModal.bind(this);
         this.onPreviewDrop = this.onPreviewDrop.bind(this);
-    }  
+        this.updateRecord = this.updateRecord.bind(this);
+    }
 
     onPreviewDrop = (files) => {
         console.log(files);
-        
+
         this.setState({
           files: this.state.files.concat(files),
          });
       }
+
 
     toggle() {
         this.setState({
@@ -80,62 +84,81 @@ class Products extends Component {
           })
             .then(res => {
               console.log(res);
-              
-              
+
+
             }).catch();
     }
 
     onGridReady(params) {
-      console.log(params);
-      
+      //console.log(params);
+
         this.gridApi = params.api;
         this.gridColumnApi = params.columnApi;
-    
+
+
         const updateData = data => {
           this.setState({ rowData: data });
         };
 
         MAIN_API({
             url: "/product",
-            method: "get"      
+            method: "get"
           })
             .then(res => {
               console.log(res);
               updateData(res.data);
-              
+
             }).catch();
     }
 
     countryCellRenderer(params) {
         //console.log(params);
-        
+
         var flag =
         '<img border="0" width="100" height="100" src="'+params.data.imageUrl+'"';
     return '<span style="cursor: default;">'+flag+'</span>';
-    }  
+    }
 
     createdDateCellRenderer(params) {
         var t = new Date(params.data.createdDate);
     return '<span>'+moment(t).format("hh:mm:ss DD-MM-YYYY")+'</span>';
-    }  
+    }
 
     updatedDateCellRenderer(params) {
         var t = new Date(params.data.updatedDate);
     return '<span>'+moment(t).format("hh:mm:ss DD-MM-YYYY")+'</span>';
-    }  
+    }
 
     actionCellRenderer(params) {
-      var updateBtn = '<button type="button" class="btn btn-info">Update</button>';
-      var deleteBtn = '<button type="button" class="btn btn-danger">Delete</button>';
-  return '<span>'+updateBtn+'</br>'+deleteBtn+'</span>';
-  }  
+      // var updateBtn  = document.createElement('button');
+      // updateBtn.innerText = 'Update';
+      // updateBtn.className='btn btn-info';
+      // updateBtn.addEventListener('click',(e)=>{
+      //     console.log(params.data.id);
+
+      // });
+
+      // var deleteBtn  = document.createElement('button');
+      // deleteBtn.innerText = 'Delete';
+      // deleteBtn.className='btn btn-danger';
+      // deleteBtn.addEventListener('click',);
+      // });
+
+      // var element = document.createElement('span');
+      // element.append(updateBtn);
+      // element.append(deleteBtn);
+
+      // return element;
+  }
 
     onQuickFilterChanged() {
         this.gridApi.setQuickFilter(document.getElementById("filter").value);
       }
-    update(row) {
-      console.log(row);
-      
+     updateRecord(value) {
+      console.log(value);
+
+      // var value = this.gridColumnApi.
+
     }
   render() {
 
@@ -153,7 +176,7 @@ class Products extends Component {
                   <ModalBody>
                   <FormGroup>
                       <Label htmlFor="name">Name</Label>
-                      <Input type="text" id="name" placeholder="Enter product name" required 
+                      <Input type="text" id="name" placeholder="Enter product name" required
                       onChange={e =>{
                         var newState = Object.assign({},this.state,{
                           name : e.target.value
@@ -164,7 +187,7 @@ class Products extends Component {
                     </FormGroup>
                     <FormGroup>
                       <Label htmlFor="price">Price</Label>
-                      <Input type="number" id="price" placeholder="Enter product price" required 
+                      <Input type="number" id="price" placeholder="Enter product price" required
                       onChange={e =>{
                         var newState = Object.assign({},this.state,{
                           price : e.target.value
@@ -172,10 +195,10 @@ class Products extends Component {
                         this.setState(newState);
                       }}
                       />
-                    </FormGroup>  
+                    </FormGroup>
                     <FormGroup>
                       <Label htmlFor="image">Price</Label>
-                      <Input type="file" id="image" placeholder="Enter product price" required 
+                      <Input type="file" id="image" placeholder="Enter product price" required
                       onChange={e =>{
                         var newState = Object.assign({},this.state,{
                           files : e.target.files
@@ -183,29 +206,35 @@ class Products extends Component {
                         this.setState(newState);
                       }}
                       />
-                    </FormGroup>                      
+                    </FormGroup>
                   </ModalBody>
                   <ModalFooter>
                     <Button color="primary" onClick={()=>{this.toggle(); this.createFunction()}}>{this.state.isCreate ?"Create":"Update"}</Button>{' '}
                     <Button color="secondary" onClick={this.toggle}>Cancel</Button>
                   </ModalFooter>
                 </Modal>
-      
+
                 <FormGroup>
-                    
-                      <Input type="text" id="filter" placeholder="Search"  
+
+                      <Input type="text" id="filter" placeholder="Search"
                       onInput={this.onQuickFilterChanged.bind(this)}
                       />
-                    </FormGroup>  
+                    </FormGroup>
         <Button onClick={()=> {this.toggle() ; this.bindCreateModal()}} className="btn btn-primary" >Create</Button>
             <div style={{ height: '550px', width: '100%' }} className="ag-theme-balham">
                 <AgGridReact
                     columnDefs={this.state.columnDefs} rowSelection="multiple"
                     rowData={this.state.rowData}
+                    enableFilter={true}
+                    pagination={true}
+                    enableSorting={true}
                     enableColResize={true}
                     onGridReady={this.onGridReady.bind(this)}
                     >
                 </AgGridReact>
+                <Alert color="primary" isOpen={this.state.successNotification}>
+                  This is a primary alert — check it out!
+                </Alert>
             </div>
       </div>
     )
