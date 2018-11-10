@@ -21,7 +21,7 @@ class Products extends Component {
 
         this.state = {
             columnDefs: [
-                {headerName: "Image", field: "image_url" ,headerCheckboxSelection: true,
+                {headerName: "Image", field: "imageUrl" ,headerCheckboxSelection: true,
                 headerCheckboxSelectionFilteredOnly: true,
                 checkboxSelection: true,cellRenderer: this.countryCellRenderer,autoHeight: true},
                 {headerName: "Name", field: "name"},
@@ -42,7 +42,8 @@ class Products extends Component {
             filter:"",
             successNotification:false,
             delMulModal:false,
-            creating:false
+            creating:false,
+            rowSelection:[]
         }
 
         this.toggle = this.toggle.bind(this);
@@ -50,6 +51,14 @@ class Products extends Component {
         this.bindCreateModal = this.bindCreateModal.bind(this);
         this.onPreviewDrop = this.onPreviewDrop.bind(this);
         this.updateRecord = this.updateRecord.bind(this);
+    }
+
+    deleteMul =() =>{
+      console.log(this.state.rowSelection);
+      
+      var selectedRowNodes = this.gridApi.getSelectedRows();
+      console.log(selectedRowNodes);
+      
     }
 
     onPreviewDrop = (files) => {
@@ -169,9 +178,7 @@ class Products extends Component {
 
     }
     
-    deleteMul = () =>{
 
-    }
   render() {
 
     //const userList = usersData.filter((user) => user.id < 10)
@@ -234,7 +241,7 @@ class Products extends Component {
                   </ModalBody>
                   <ModalFooter>
                     <Button color="primary" onClick={()=> this.deleteMul()}>Delete</Button>{' '}
-                    <Button color="secondary" onClick={this.toggleDelMulModal}>Cancel</Button>
+                    {/* //<Button color="secondary" onClick={this.toggleDelMulModal}>Cancel</Button> */}
                   </ModalFooter>
                 </Modal>
 
@@ -245,11 +252,12 @@ class Products extends Component {
                       />
                     </FormGroup>
         <Button onClick={()=> {this.toggle() ; this.bindCreateModal()}} className="btn btn-primary" disabled={this.state.creating}>Create</Button>
-        <Button onClick={()=> this.toggleDelMulModal()} className="btn btn-primary" >Delete</Button>
+        {/* <Button onClick={()=> this.toggleDelMulModal()} className="btn btn-primary" >Delete </Button> */}
 
             <div style={{ height: '550px', width: '100%' }} className="ag-theme-balham">
                 <AgGridReact
-                    columnDefs={this.state.columnDefs} rowSelection="multiple"
+                    columnDefs={this.state.columnDefs}
+                     rowSelection="multiple"
                     rowData={this.state.rowData}
                     enableFilter={true}
                     pagination={true}

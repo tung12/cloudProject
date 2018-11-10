@@ -14,6 +14,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
 import java.security.Principal;
+import java.util.List;
 
 @RestController
 @RequestMapping("/api")
@@ -44,6 +45,13 @@ public class ProductController {
     @PostMapping(value="/product/delete")
     public ResponseEntity deleteProduct(@RequestBody Product product) throws ProductException.ProductNotExistException {
         productService.deleteProduct(product.getId());
+        return ResponseEntity.status(HttpStatus.OK).build();
+    }
+
+    @PostMapping(value="/product/deleteMul")
+    public ResponseEntity deleteMulProduct(@RequestBody List<Product> product) throws ProductException.ProductNotExistException {
+        System.out.println(product.size());
+        //productService.deleteProduct(product.getId());
         return ResponseEntity.status(HttpStatus.OK).build();
     }
 
